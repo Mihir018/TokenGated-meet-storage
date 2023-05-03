@@ -57,6 +57,7 @@ export default function Home() {
 
   const encryptionSignature = async() =>{
     const provider = ((window.ethereum != null) ? new ethers.providers.Web3Provider(window.ethereum) : ethers.providers.getDefaultProvider());
+    await provider.send('eth_requestAccounts', []);
     const signer = provider.getSigner();
     const address = await signer.getAddress();
     const messageRequested = (await lighthouse.getAuthMessage(address)).data.message;
