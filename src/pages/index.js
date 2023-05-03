@@ -49,6 +49,7 @@ export default function Home() {
   } = useVideo();
 
   const { joinRoom, leaveRoom } = useRoom();
+  const roomId = 'hub-qcpf-szd';
 
   const { peers } = usePeers();
 
@@ -283,7 +284,7 @@ export default function Home() {
           <Button
             disabled={!startRecording.isCallable}
             onClick={() =>
-              startRecording(`${window.location.href}rec/${hub-qcpf-szd}`)
+              startRecording(`${window.location.href}rec/${roomId}`)
             }
           >
             {`START_RECORDING error: ${error}`}
