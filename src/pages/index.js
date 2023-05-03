@@ -53,7 +53,7 @@ export default function Home() {
 
   const { peers } = usePeers();
 
-  const { startRecording, stopRecording, isStarting, inProgress, isStopping, error } = useRecording();
+  const { startRecording, stopRecording, isStarting, inProgress, isStopping, error, data: recordingData, } = useRecording();
 
   const encryptionSignature = async() =>{
     const provider = ((window.ethereum != null) ? new ethers.providers.Web3Provider(window.ethereum) : ethers.providers.getDefaultProvider());
@@ -159,16 +159,13 @@ export default function Home() {
   }
 
   return (
-    <div className="grid grid-cols-2">
+    <div className="grid grid-cols-1">
       <div>
         <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://huddle01.com">
-            Huddle01 SDK!
-          </a>
+          <center>Record the meet</center>
         </h1>
 
-        <h2 className="text-2xl">Room State</h2>
+        {/* <h2 className="text-2xl">Room State</h2>
         <h3>{JSON.stringify(state.value)}</h3>
 
         <h2 className="text-2xl">Me Id</h2>
@@ -189,9 +186,10 @@ export default function Home() {
         <h2 className="text-2xl">Consumers</h2>
         <div className="break-words">
           {JSON.stringify(state.context.consumers)}
-        </div>
+        </div> */}
 
-        <h2 className="text-3xl text-blue-500 font-extrabold">Idle</h2>
+        {/* <h2 className="text-3xl text-blue-500 font-extrabold">Idle</h2> */}
+        <div className="flex gap-4 flex-wrap">
         <Button
           disabled={!state.matches('Idle')}
           onClick={() => initialize('KL1r3E1yHfcrRbXsT4mcE-3mK60Yc3YR')}
@@ -201,7 +199,7 @@ export default function Home() {
 
         <br />
         <br />
-        <h2 className="text-3xl text-red-500 font-extrabold">Initialized</h2>
+        {/* <h2 className="text-3xl text-red-500 font-extrabold">Initialized</h2> */}
         <Button
           disabled={!joinLobby.isCallable}
           onClick={() => {
@@ -210,6 +208,7 @@ export default function Home() {
         >
           JOIN_LOBBY
         </Button>
+        </div>
         <br />
         <br />
         <h2 className="text-3xl text-yellow-500 font-extrabold">Lobby</h2>
@@ -253,6 +252,27 @@ export default function Home() {
           </Button>
         </div>
         <br />
+        <div>
+        Player:
+        <video ref={videoRef} autoPlay muted></video>
+        <div className="grid grid-cols-4">
+          {Object.values(peers)
+            .filter(peer => peer.cam)
+            .map(peer => (
+              <Video
+                key={peer.peerId}
+                peerId={peer.peerId}
+                track={peer.cam}
+                debug
+              />
+            ))}
+          {Object.values(peers)
+            .filter(peer => peer.mic)
+            .map(peer => (
+              <Audio key={peer.peerId} peerId={peer.peerId} track={peer.mic} />
+            ))}
+        </div>
+      </div>
         <h2 className="text-3xl text-green-600 font-extrabold">Room</h2>
         <div className="flex gap-4 flex-wrap">
           <Button
@@ -298,32 +318,20 @@ export default function Home() {
             LEAVE_ROOM
           </Button>
         </div>
+        <br></br>
+        <br></br>
+        <h2 className="text-2xl">Recording Data</h2>
+        <div className="break-words">{JSON.stringify(recordingData)}</div>
 
         {/* Uncomment to see the Xstate Inspector */}
         {/* <Inspect /> */}
       </div>
-      <div>
-        Me Video:
-        <video ref={videoRef} autoPlay muted></video>
-        <div className="grid grid-cols-4">
-          {Object.values(peers)
-            .filter(peer => peer.cam)
-            .map(peer => (
-              <Video
-                key={peer.peerId}
-                peerId={peer.peerId}
-                track={peer.cam}
-                debug
-              />
-            ))}
-          {Object.values(peers)
-            .filter(peer => peer.mic)
-            .map(peer => (
-              <Audio key={peer.peerId} peerId={peer.peerId} track={peer.mic} />
-            ))}
-        </div>
-      </div>
+      
       <div style={{margin: 30 + 'px'}}>
+        <h1 className="text-6xl font-bold">
+          <center>Token-Gate the Recording</center>
+        </h1>
+        <br></br>
         <input onChange={e=>uploadFileEncrypted(e)} type="file" />
         <h3>Uploaded File Details</h3>
         <p>CID:{cid}</p>
