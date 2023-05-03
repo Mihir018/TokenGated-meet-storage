@@ -56,7 +56,7 @@ export default function Home() {
   const { startRecording, stopRecording, isStarting, inProgress, isStopping, error } = useRecording();
 
   const encryptionSignature = async() =>{
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const provider = ((window.ethereum != null) ? new ethers.providers.Web3Provider(window.ethereum) : ethers.providers.getDefaultProvider());
     const signer = provider.getSigner();
     const address = await signer.getAddress();
     const messageRequested = (await lighthouse.getAuthMessage(address)).data.message;
