@@ -23,6 +23,7 @@ export default function Home() {
   const videoRef = useRef(null);
   const [cid, setCid] = React.useState(null)
   const [status, setStatus] = React.useState(null)
+  const [fileURL, setFileURL] = React.useState(null);
 
   const { state, send } = useMeetingMachine();
   // Event Listner
@@ -115,12 +116,13 @@ export default function Home() {
     const conditions = [
       {
         id: 1,
-        chain: "hyperspace",
-        method: "balanceOf",
-        standardContractType: "ERC721",
-        contractAddress: "0xe065a275d932cc9c4cd00824914b9fbcace2e5cf",
-        returnValueTest: { comparator: ">=", value: "1" },
-        parameters: [":userAddress"],
+        chain: "Polygon",
+        method: "getBalance",
+        standardContractType: "",
+        returnValueTest: {
+            comparator: ">=",
+            value: "1000000000000000000"
+        }
       },
     ];
 
@@ -156,6 +158,45 @@ export default function Home() {
         }
       }
     */
+  }
+
+  const decrypt = async() =>{
+    // Fetch file encryption key
+    const cid = "QmR54spknUPfTfrCRHVC9ABYkPRehqnPJHWg9QPadqoVr5"; //replace with your IPFS CID
+    const {publicKey, signedMessage} = await encryptionSignature();
+    /*
+      fetchEncryptionKey(cid, publicKey, signedMessage)
+        Parameters:
+          CID: CID of the file to decrypt
+          publicKey: public key of the user who has access to file or owner
+          signedMessage: message signed by the owner of publicKey
+    */
+    const keyObject = await lighthouse.fetchEncryptionKey(
+      cid,
+      publicKey,
+      signedMessage
+    );
+
+    // Decrypt file
+    /*
+      decryptFile(cid, key, mimeType)
+        Parameters:
+          CID: CID of the file to decrypt
+          key: the key to decrypt the file
+          mimeType: default null, mime type of file
+    */
+   
+    const fileType = "video/webm";
+    const decrypted = await lighthouse.decryptFile(cid, keyObject.data.key, fileType);
+    console.log(decrypted)
+    /*
+      Response: blob
+    */
+
+    // View File
+    const url = URL.createObjectURL(decrypted);
+    console.log(url);
+    setFileURL(url);
   }
 
   return (
@@ -332,19 +373,38 @@ export default function Home() {
           <center>Token-Gate the Recording</center>
         </h1>
         <br></br>
-        <input onChange={e=>uploadFileEncrypted(e)} type="file" />
+        {/* <div className="file-input">
+          <input onChange={e=>uploadFileEncrypted(e)} type="file" id="file" class="file" />
+          <label for="file">
+            Select file
+          <p class="file-name"></p>
+          </label>
+        </div> */}
+        <div className='container'>
+        <div className='container'>
+        <input onChange={e=>uploadFileEncrypted(e)} type="file" name="file" id="file" class="inputfile" />
+        <label for="file">Choose a file</label>
         <h3>Uploaded File Details</h3>
         <p>CID:{cid}</p>
         <div style={{marginTop: 100 + 'px'}}>
-          <button onClick={()=>{applyAccessConditions()}}>Apply Access Conditions</button>
+          <button className='button2' onClick={()=>{applyAccessConditions()}}>Apply Access Conditions</button>
+          <br />
+          <br />
           <p>Status:{status}</p>  
           {
-            status?
             <p>Visit at: https://files.lighthouse.storage/viewFile/{cid}</p>
+          }
+          <br />
+          <br />
+          <button className='button2' onClick={()=>decrypt()}>Decrypt the content</button>
+          </div>
+          {
+            fileURL?
+            <a href={fileURL} target="_blank">viewFile</a>
             :
             null
           }
-          
+          </div>
         </div>
       </div>
     </div>
