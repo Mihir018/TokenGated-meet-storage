@@ -162,7 +162,7 @@ export default function Home() {
 
   const decrypt = async() =>{
     // Fetch file encryption key
-    const cid = "QmP1DQETJF14U1B2GdMo4Lx6hy5GYyJjeDJABkUAEgVksL"; //replace with your IPFS CID
+    const cid = 'QmeAmcNwDxnYy7Xf9p9YxJyFEFwLQJC5kGnscUDwuZjFAP'; //replace with your IPFS CID
     const {publicKey, signedMessage} = await encryptionSignature();
     /*
       fetchEncryptionKey(cid, publicKey, signedMessage)
@@ -385,7 +385,7 @@ export default function Home() {
         <div className='container'>
         <div className='container'>
         <input onChange={e=>uploadFileEncrypted(e)} type="file" name="file" id="file" className="inputfile" />
-        <label for="file">Choose a file</label>
+        <label for="file">Choose a file to encrypt</label>
         <h3>Uploaded File Details</h3>
         <p>CID:{cid}</p>
         <div style={{marginTop: 100 + 'px'}}>
