@@ -116,7 +116,7 @@ export default function Home() {
     const conditions = [
       {
         id: 1,
-        chain: "Polygon",
+        chain: "Mumbai",
         method: "getBalance",
         standardContractType: "",
         returnValueTest: {
@@ -162,7 +162,7 @@ export default function Home() {
 
   const decrypt = async() =>{
     // Fetch file encryption key
-    const cid = "QmR54spknUPfTfrCRHVC9ABYkPRehqnPJHWg9QPadqoVr5"; //replace with your IPFS CID
+    const cid = "QmP1DQETJF14U1B2GdMo4Lx6hy5GYyJjeDJABkUAEgVksL"; //replace with your IPFS CID
     const {publicKey, signedMessage} = await encryptionSignature();
     /*
       fetchEncryptionKey(cid, publicKey, signedMessage)
@@ -205,6 +205,8 @@ export default function Home() {
         <h1 className="text-6xl font-bold">
           <center>Record the meet</center>
         </h1>
+        <br />
+        <br />
 
         {/* <h2 className="text-2xl">Room State</h2>
         <h3>{JSON.stringify(state.value)}</h3>
@@ -382,7 +384,7 @@ export default function Home() {
         </div> */}
         <div className='container'>
         <div className='container'>
-        <input onChange={e=>uploadFileEncrypted(e)} type="file" name="file" id="file" class="inputfile" />
+        <input onChange={e=>uploadFileEncrypted(e)} type="file" name="file" id="file" className="inputfile" />
         <label for="file">Choose a file</label>
         <h3>Uploaded File Details</h3>
         <p>CID:{cid}</p>
@@ -398,9 +400,11 @@ export default function Home() {
           <br />
           <button className='button2' onClick={()=>decrypt()}>Decrypt the content</button>
           </div>
+          <br />
+          <br />
           {
             fileURL?
-            <a href={fileURL} target="_blank">viewFile</a>
+            <a className='button2' href={fileURL} target="_blank">viewFile</a>
             :
             null
           }
